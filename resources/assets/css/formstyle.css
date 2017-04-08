@@ -1,0 +1,23 @@
+.mg-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+}
+.mg-form__input {
+    height: 32px;
+    border-radius: 8px;
+    padding-left: 8px;
+    border: 1px solid gray;
+}
+.mg-form__input + .mg-form__input {
+    margin-top: 16px;
+}
+.mg-form__input--textarea {
+    height: 128px;
+}
+.mg-form__input--submit {
+    cursor: pointer;
+}
+h3 {
+    margin: 10px 0;
+}
