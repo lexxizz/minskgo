@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel="stylesheet">
     <script src="https://unpkg.com/flatpickr"></script>
     <script src="https://use.fontawesome.com/a522b0d004.js"></script>
+    <script src="{!! asset('js/nouislider.min.js') !!}"></script>
 
 </head>
 
@@ -20,7 +21,6 @@
 <div class="body body--popup" id="layout__main"></div>
 
 <script src={{ env('NAME') }}></script>
-<script src="{!! asset('js/nouislider.min.js') !!}"></script>
 <script src="{!! asset('js/scripts.js') !!}"></script>
 
 </body>

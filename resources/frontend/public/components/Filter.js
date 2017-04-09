@@ -1,5 +1,7 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
+import Flatpickr from 'react-flatpickr';
+import Nouislider from 'react-nouislider';
 
 
 class Filter extends React.Component {
@@ -22,20 +24,12 @@ class Filter extends React.Component {
                 <div className="filter__section">
                     <div className="filter__title">Даты</div>
                     <div className="input__line">
-                        <input type="text" className="input input__date" />
+                        <Flatpickr className='input input__date' options={{minDate: '2017-01-01'}} />
                     </div>
                 </div>
                 <div className="filter__section">
                     <div className="filter__title">Время</div>
-                    <div className="slider">
-                        <div className="slider__elem" id="range"></div>
-                        <div className="slider__value">
-                            <div className="slider__text">C</div>
-                            <div className="slider__text slider__text--bold" id="sliderValueMin"></div>
-                            <div className="slider__text">до</div>
-                            <div className="slider__text slider__text--bold" id="sliderValueMax"></div>
-                        </div>
-                    </div>
+                    <Nouislider range={{min: 0, max: 200}} start={[0, 100]} tooltips />
                 </div>
                 <div className="filter__section">
                     <div className="filter__title">Категории</div>

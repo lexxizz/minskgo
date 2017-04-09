@@ -73,6 +73,7 @@ class Preview extends React.Component {
                                     <br />
                                     <time className="time">{this.props.event.time ? this.props.event.time : ''}</time>
                                 </div>
+                                <div className="place">{this.props.event.place.name}</div>
                                 <div className="address"><i className="fa fa-map-marker" aria-hidden="true"></i>{this.props.event.place.address}</div>
                                 <div className="preview__tags-wrapper">
                                     <button className="tags tags--simple">танцы</button>

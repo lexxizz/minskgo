@@ -16,8 +16,7 @@ class MainPage extends React.Component {
 
         this.state = {};
     }
-
-
+    
     componentDidMount() {
         EventStore.addChangeListener(this.__changeEvent);
         EventActions.getEvents();

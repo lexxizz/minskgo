@@ -12,7 +12,7 @@
             {{ session()->get('message') }}
         </div>
     @endif
-    <form  class="mg-form" action="{{action('TestController@store')}}" method="post">
+    <form  class="mg-form" action="{{action('AdminController@store')}}" method="post">
         <h3>Форма ручного создания событий</h3>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input name="name" type="text" class="mg-form__input" id="title" placeholder="Заголовок"/>
