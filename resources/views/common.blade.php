@@ -19,7 +19,7 @@
 <body>
 <div class="body body--popup" id="layout__main"></div>
 
-<script src="http://stock.lc:3001/js/bundle.js"></script>
+<script src={{ env('NAME') }}></script>
 <script src="{!! asset('js/nouislider.min.js') !!}"></script>
 <script src="{!! asset('js/scripts.js') !!}"></script>
 
