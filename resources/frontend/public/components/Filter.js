@@ -29,7 +29,15 @@ class Filter extends React.Component {
                 </div>
                 <div className="filter__section">
                     <div className="filter__title">Время</div>
-                    <Nouislider range={{min: 0, max: 200}} start={[0, 100]} tooltips />
+                    <div className="slider">
+                    <Nouislider className="slider__elem" range={{min: 0, max: 24}} start={[0, 100]} />
+                    <div className="slider__value">
+                        <div className="slider__text">C</div>
+                        <div className="slider__text slider__text--bold" id="sliderValueMin"></div>
+                        <div className="slider__text">до</div>
+                        <div className="slider__text slider__text--bold" id="sliderValueMax"></div>
+                    </div>
+                        </div>
                 </div>
                 <div className="filter__section">
                     <div className="filter__title">Категории</div>
