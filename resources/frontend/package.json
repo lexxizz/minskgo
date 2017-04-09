@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build_author": "./node_modules/.bin/webpack --config ./frontend/shared/webpack.config.author.js"
+    "build": "./node_modules/.bin/webpack --config ./shared/webpack.config.author.js"
   },
   "author": "",
   "dependencies": {
@@ -17,7 +17,7 @@
     "json-loader": "^0.5.4",
     "lodash": "~4.8.2",
     "moment": "~2.13.0",
-    "node-datetime": "~1.0.0",
+    "node-datetime": "^1.0.0",
     "path": "~0.12.7",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",

@@ -13,8 +13,12 @@ class CommonController extends Controller
     }
     
     public function events() {
-        $events = Event::all();
-        return $events->toJson();
+        $events = Event::with('place')->get();
+
+        return response()->json([
+            'status' => 'OK',
+            'events' => $events
+        ]);
     }
     
 

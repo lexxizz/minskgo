@@ -7,11 +7,11 @@ var base = require('./webpack.config.base');
 
 module.exports = _.merge(base, {
 
-    entry: ['./frontend/author/index.js'], // Файл - входная точка браузерного клиента
+    entry: ['./public/index.js'], // Файл - входная точка браузерного клиента
 
     output: {
         path: __dirname + "/../../assets",
-        filename: "/js/author.js"
+        filename: "/js/public.js"
     },
     plugins: [
         new webpack.DefinePlugin({
