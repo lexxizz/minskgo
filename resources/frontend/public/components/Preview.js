@@ -97,7 +97,7 @@ class Preview extends React.Component {
                         </div>
                     </div>
 
-                    <div className="preview__description" dangerouslySetInnerHTML={{__html:this.props.event.descr.replace(/<br\s*\/?>/mg, '')}}>
+                    <div className="preview__description" dangerouslySetInnerHTML={{__html:this.props.event.descr}}>
                     </div>
                 </div>
         );
