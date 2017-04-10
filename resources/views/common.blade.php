@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MinskGo!</title>
 
+    <meta name="_token" content="{{ csrf_token() }}">
     <link href="{!! asset('css/common.css') !!}" media="all" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|PT+Sans:700" rel="stylesheet">

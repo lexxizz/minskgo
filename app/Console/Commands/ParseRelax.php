@@ -84,7 +84,14 @@ class ParseRelax extends Command
             $hash['uid'] = $uid->count() ? $uid->attr('event_id') : null;
 
             $price = $link_crawler->filter('.b-afisha_cinema_description_table_desc > .wysiwyg p');
-            $hash['price'] = $price->count() ? $price->text() : null;
+            if($price->count()) {
+                if(stristr(trim($price->text()), 'Бесплатно')) {
+                    $hash['price'] = 'free';
+                }else{
+                    $hash['price'] = $price->text();
+                }
+            }
+
 
             $date_node = $link_crawler->filter('.schedule__day strong');
             $date_text = $date_node->count() ? $date_node->text() : null;
@@ -101,16 +108,22 @@ class ParseRelax extends Command
             if($time_descr->count()) {
                 if(trim($link_crawler->filter('.b-afisha_cinema_description_table_name')->first()->text()) == 'Время работы') {
                     $time = $link_crawler->filter('.b-afisha_cinema_description_table_desc')->first();
-                    $hash['time'] = $time->count() ? trim($time->text()) : null;
+                    if($time->count()) {
+                        $time_val = explode(':', trim($time->text()));
+                        if(sizeof($time_val[0]) <=2) {
+                            $hash['time'] = $time_val[0];
+                        }
+                    }
                 }
                 if(trim($link_crawler->filter('.b-afisha_cinema_description_table_name')->first()->text()) == 'Жанр') {
                     $time = $link_crawler->filter('.b-afisha_cinema_description_table_desc')->first();
                     $genre_node = $time->count() ? trim($time->text()) : null;
                     $genres = explode(',', $genre_node);
                     foreach ($genres as $genre) {
-                        if(!Genre::where('title', trim($genre))->first()){
-                            Genre::create(['title' => trim($genre)]);
+                        if(!$g = Genre::where('title', trim($genre))->first()){
+                            $g = Genre::create(['title' => trim($genre)]);
                         }
+                        $hash['genre_id'] = $g->id;
                     }
                 }
             }
@@ -133,9 +146,14 @@ class ParseRelax extends Command
                     }
                     $hash['date_from'] = $hash['date_to'] = $this->getDateByString($d);
                 }
-                if(!isset($hash['time'])) {
+                if(!isset($hash['time']) ) {
                     $time = $link_crawler->filter('.schedule__seance-time');
-                    $hash['time'] = $time->count() ? $time->text() : null;
+                    if($time->count()) {
+                        $time_val = explode(':', trim($time->text()));
+                        if(sizeof($time_val[0]) <=2) {
+                            $hash['time'] = trim($time_val[0]);
+                        }
+                    }
                 }
 
             }

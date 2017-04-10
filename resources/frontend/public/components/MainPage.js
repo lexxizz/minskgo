@@ -14,7 +14,7 @@ class MainPage extends React.Component {
 
         this.__changeEvent = this._onChange.bind(this);
 
-        this.state = {};
+        this.state = {mobile_view: false};
     }
     
     componentDidMount() {
@@ -29,6 +29,14 @@ class MainPage extends React.Component {
     _onChange() {
        this.setState(EventStore.getEvents());
     }
+    
+    _toggleMobileFilter() {
+        if(!this.state.mobile_view) {
+            this.setState({mobile_view: true});
+        }else{
+            this.setState({mobile_view: false});
+        }
+    }
 
     render() {
         if(!this.state.events) {
@@ -39,7 +47,7 @@ class MainPage extends React.Component {
                 <div className="navbar">
                     <span className="logo">MinskGo</span>
                 </div>
-                <button className="btn-round btn-round--filter"><i className="fa fa-filter" aria-hidden="true"></i></button>
+                <button className="btn-round btn-round--filter" onClick={this._toggleMobileFilter.bind(this)}><i className="fa fa-filter" aria-hidden="true"></i></button>
 
                 <div className="wrapper">
                     <div className="cards">
@@ -47,7 +55,7 @@ class MainPage extends React.Component {
                             return <EventCard key={key} data={event} />
                         })}
                     </div>
-                    <Filter />
+                    <Filter mobile_active={this.state.mobile_view} />
                 </div>
 
                <div className="preview" id="preview"></div>

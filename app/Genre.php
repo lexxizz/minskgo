@@ -11,4 +11,8 @@ class Genre extends Model
     protected $fillable = [
         'title'
     ];
+
+    public function event() {
+        $this->belongsTo('App\Event','genre_id','id');
+    }
 }

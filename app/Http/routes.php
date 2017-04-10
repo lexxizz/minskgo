@@ -16,5 +16,6 @@ Route::get('/event/add', 'AdminController@add');
 Route::post('/event/store', 'AdminController@store');
 
 Route::group(['prefix' => 'ajax'], function () {
-    Route::get('/events', 'CommonController@events');
+    Route::post('/events', 'CommonController@events');
+    Route::get('/categories/all', 'CommonController@categories');
 });

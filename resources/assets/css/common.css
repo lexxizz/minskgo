@@ -41,6 +41,7 @@ body {
   font-size: 22px;
   line-height: 1.1;
   font-weight: normal;
+  margin-bottom: 8px;
 }
 .filter {
   display: none;
@@ -81,6 +82,13 @@ body {
 }
 .filter--active {
   display: block;
+}
+@media screen and (min-width: 992px) {
+  .filter__inner {
+    position: fixed;
+    top: 80px;
+    left: 16px;
+  }
 }
 .filter__section + .filter__section {
   margin-top: 16px;
@@ -144,6 +152,10 @@ body {
   top: 50%;
   transform: translateY(-50%);
   right: 8px;
+}
+.tags--active {
+  background-color: #0050ff;
+  color: #fff;
 }
 .input {
   border: 1px solid #0050ff;
@@ -319,6 +331,9 @@ body {
 }
 .card__price {
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   left: 16px;
   top: 16px;
   width: 32px;
@@ -402,6 +417,18 @@ body {
   line-height: 1;
   z-index: 100;
 }
+.btn-uni {
+  border: 2px solid blue;
+  border-radius: 50%;
+  background: white;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+}
+.btn-uni__icon {
+  width: 30px;
+  height: 30px;
+}
 .h2 {
   font-size: 30px;
   margin: 0;
@@ -409,6 +436,9 @@ body {
   font-family: 'PT Sans', sans-serif;
   font-weight: bold;
   color: #fff;
+}
+b {
+  font-weight: bold;
 }
 .text {
   font-size: 16px;
@@ -422,6 +452,9 @@ body {
 }
 .time__wrapper {
   margin-bottom: 16px;
+}
+.place {
+  margin-bottom: 4px;
 }
 .address {
   margin-bottom: 8px;
@@ -462,13 +495,18 @@ body {
   height: 100%;
 }
 .preview__close {
-  position: absolute;
+  position: fixed;
   right: 15px;
-  top: 15px;
+  top: 76px;
   font-size: 24px;
   cursor: pointer;
   z-index: 11;
   color: #fff;
+}
+@media screen and (min-width: 992px) {
+  .preview__close {
+    color: #0050ff;
+  }
 }
 .preview__head {
   display: flex;
@@ -514,7 +552,7 @@ body {
   justify-content: space-between;
   padding: 16px;
   width: 100%;
-  background-image: url(../img/merryCr.jpg);
+  background-image: attr('data-bg' 'url');
   background-position: right;
   color: #fff;
   position: relative;
@@ -881,4 +919,61 @@ body {
 .flatpickr-day.endRange.nextMonthDay {
   background-color: #0050ff !important;
   border-color: #0050ff !important;
+}
+.features {
+  position: fixed;
+  z-index: 10;
+  top: 102px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+  padding-bottom: 32px;
+  background-color: #fff;
+  border-radius: 8px;
+  width: calc(100% - 32px);
+  max-width: 480px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3), 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px 0px rgba(255, 255, 255, 0.25), inset 0px -1px 0px rgba(0, 0, 0, 0.15);
+}
+.features--open {
+  display: flex;
+}
+.features__close {
+  position: absolute;
+  color: #0050ff;
+  top: 12px;
+  right: 16px;
+  font-size: 24px;
+  cursor: pointer;
+}
+.features__title {
+  margin: 32px 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-size: 28px;
+  text-align: center;
+}
+.features__list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.features__item {
+  width: 50%;
+  font-size: 18px;
+  color: #0050ff;
+  margin-bottom: 8px;
+}
+.features__item--disabled {
+  color: #b3caff;
+}
+.features__text {
+  color: #000;
+  padding-left: 8px;
+}
+.features__text--gray {
+  color: #808080;
 }
