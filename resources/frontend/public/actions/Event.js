@@ -4,22 +4,23 @@ import Request from 'napishem-frontend-utils/modules/Request';
 
 var EventActions = {
 
-    getEvents(date, categories, free, not_free) {
-        //asyncDispatch('GET_EVENTS', '/ajax/events');
+    getEvents(filter) {
         var u = '/ajax/events';
         var data = new FormData();
-        if(date) {
-            data.append('date', date);
-        }
-        if(categories) {
-            data.append('categories', JSON.stringify(categories));
-        }
-        
-        if(free) {
-            data.append('free', 1);
-        }
-        if(not_free) {
-            data.append('not_free', 1);
+        if(filter) {
+            if(filter.date) {
+                data.append('date', filter.date);
+            }
+            if(filter.categories) {
+                data.append('categories', JSON.stringify(filter.categories));
+            }
+
+            if(filter.free) {
+                data.append('free', 1);
+            }
+            if(filter.not_free) {
+                data.append('not_free', 1);
+            }
         }
 
         var r = new Request(u, 'POST');

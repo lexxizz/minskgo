@@ -86,8 +86,9 @@ class ParseRelax extends Command
             $price = $link_crawler->filter('.b-afisha_cinema_description_table_desc > .wysiwyg p');
             if($price->count()) {
                 if(stristr(trim($price->text()), 'Бесплатно')) {
-                    $hash['price'] = 'free';
+                    $hash['free'] = 1;
                 }else{
+                    $hash['free'] = 0;
                     $hash['price'] = $price->text();
                 }
             }
@@ -99,8 +100,14 @@ class ParseRelax extends Command
             if($date_text) {
                 $date = explode('—', $date_text);
                 if(sizeof($date) >=2) {
-                    $hash['date_from'] = $this->getDateByString($date[0]);
-                    $hash['date_to'] = $this->getDateByString($date[1]);
+                    $from = $this->getDateByString($date[0]);
+                    if($from) {
+                        $hash['date_from'] = $from->setTime(00, 00, 00);
+                    }
+                    $to = $this->getDateByString($date[1]);
+                    if($to) {
+                        $hash['date_to'] = $to->setTime(23, 59, 59);
+                    }
                 }
             }
 
@@ -131,10 +138,10 @@ class ParseRelax extends Command
             
             if($link_crawler->filter('.schedule__day')->count()) {
                 if(stristr(trim($link_crawler->filter('.schedule__day')->text()), 'сегодня')) {
-                    $hash['date_from'] = date("Y-m-d H:i:s");
+                    $hash['date_from'] = (new \DateTime())->setTime(00, 00, 00);
                 }
                 if(stristr(trim($link_crawler->filter('.schedule__day')->text()), 'завтра')) {
-                    $hash['date_from'] = (new \DateTime())->modify('+1 day');
+                    $hash['date_from'] = (new \DateTime())->modify('+1 day')->setTime(00, 00, 00);
                 }
                 if(!isset($hash['date_from']) && !isset($hash['date_to'])){
                     $date = explode(',', $link_crawler->filter('.schedule__day')->text());
@@ -144,7 +151,16 @@ class ParseRelax extends Command
                     if(sizeof($date) == 2) {
                         $d = $date[1];
                     }
-                    $hash['date_from'] = $hash['date_to'] = $this->getDateByString($d);
+                    $from = $this->getDateByString($d);
+                    if($from) {
+                        $hash['date_from'] = $from->setTime(00, 00, 00);
+                    }
+
+                    $to = $this->getDateByString($d);
+                    if($to) {
+                        $hash['date_to'] = $to->setTime(23, 59, 59);
+                    }
+
                 }
                 if(!isset($hash['time']) ) {
                     $time = $link_crawler->filter('.schedule__seance-time');

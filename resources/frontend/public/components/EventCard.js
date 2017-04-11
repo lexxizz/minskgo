@@ -18,7 +18,7 @@ class EventCard extends React.Component {
                 <a href="#" className="card__content">
                     <h3 className="h3">{this.props.data.name}</h3>
                     <span className="card__like"><i className="fa fa-heart-o" aria-hidden="true"></i></span>
-                    <span className={`card__price ${(['free'].indexOf(this.props.data.price) == -1)  ? `card__price--pay` : ``}`}><i className="fa fa-usd" aria-hidden="true"></i></span>
+                    <span className={`card__price ${this.props.data.free != 1  ? `card__price--pay` : ``}`}><i className="fa fa-usd" aria-hidden="true"></i></span>
                     <div className="card__tags-wrapper">
                         <button className="tags tags--simple">танцы</button>
                         <button className="tags tags--simple">спорт</button>

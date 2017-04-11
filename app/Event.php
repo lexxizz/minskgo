@@ -9,7 +9,7 @@ class Event extends Model
     protected $table = 'events';
 
     protected $fillable = [
-        'name', 'image', 'descr', 'uid', 'price', 'time', 'place_id', 'date_from', 'date_to', 'genre_id'
+        'name', 'image', 'descr', 'uid', 'price', 'time', 'place_id', 'date_from', 'date_to', 'genre_id', 'free'
     ];
 
     public function place() {
@@ -18,5 +18,17 @@ class Event extends Model
 
     public function genre() {
         return $this->hasMany('App\Genre', 'id', 'genre_id');
+    }
+
+    public function scopeActual($query) {
+        return $query->where('date_to', '>=', new \DateTime());
+    }
+    
+    public function scopeFree($query) {
+        return $query->where('free', 1);
+    }
+    
+    public function scopeUnfree($query) {
+        return $query->where('free', 0);
     }
 }

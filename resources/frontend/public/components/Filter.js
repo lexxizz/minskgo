@@ -16,7 +16,9 @@ class Filter extends React.Component {
 
         this.__changeEvent = this._onChange.bind(this);
 
-        this.state = {current_date: null, active_categories: [], price_free: true, price_not_free: true};
+        this.state = {current_date: null, active_categories: [], price_free: true, price_not_free: true,
+                        start_time: 0, finish_time: 24
+                    };
     }
 
     componentDidMount() {
@@ -39,7 +41,11 @@ class Filter extends React.Component {
     }
 
     __getEvents() {
-        EventActions.getEvents(this.state.current_date, this.state.active_categories, this.state.price_free, this.state.price_not_free);
+        let filter = {date: this.state.current_date, categories: this.state.active_categories,
+                        free: this.state.price_free, not_free: this.state.price_not_free,
+                        start_time: this.state.start_time, finish_time: this.state.finish_time
+        };
+        EventActions.getEvents(filter);
     }
 
     __getCategories() {
@@ -101,6 +107,7 @@ class Filter extends React.Component {
         //this.setState({time: {start: Math.round(e[0]), end: Math.round(e[1])}});
         document.getElementById('sliderValueMin').innerHTML = Math.round(e[0]);
         document.getElementById('sliderValueMax').innerHTML = Math.round(e[1]);
+        //this.setState({start_time: Math.round(e[0]), finish_time: Math.round(e[1])});
     }
 
     render() {
