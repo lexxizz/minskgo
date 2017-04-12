@@ -21,7 +21,7 @@ class MainPage extends React.Component {
     
     componentDidMount() {
         EventStore.addChangeListener(this.__changeEvent);
-        EventActions.getEvents();
+        EventActions.getEvents({free: true, not_free: true});
     }
 
     componentWillUnmount() {

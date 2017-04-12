@@ -3,8 +3,8 @@ import { Router, Route, Link } from 'react-router';
 import Flatpickr from 'react-flatpickr';
 import Nouislider from 'react-nouislider';
 import EventActions from '../actions/Event';
-import CategoryActions from '../actions/Category';
-import CategoryStore from '../stores/Category';
+import FilterActions from '../actions/Filter';
+import FilterStore from '../stores/Filter';
 import Request from 'napishem-frontend-utils/modules/Request';
 
 
@@ -16,36 +16,34 @@ class Filter extends React.Component {
 
         this.__changeEvent = this._onChange.bind(this);
 
-        this.state = {current_date: null, active_categories: [], price_free: true, price_not_free: true,
-                        start_time: 0, finish_time: 24
-                    };
+        this.state = {current_date: null, filters: {categories: []} };
     }
 
     componentDidMount() {
         this.__getCategories();
-        //CategoryStore.addChangeListener(this.__changeEvent);
-        //CategoryActions.getAll();
+        FilterStore.addChangeListener(this.__changeEvent);
     }
 
     componentWillUnmount() {
-        //CategoryStore.removeChangeListener(this.__changeEvent);
+        FilterStore.removeChangeListener(this.__changeEvent);
     }
 
     _onChange() {
-        //this.setState(CategoryStore.getAll());
-    }
-
-    _changeDate(e, date) {
-        this.setState({current_date: date});
+        this.setState({filters: FilterStore.getFilters()});
         this.__getEvents();
     }
 
+    _changeDate(e, date) {
+        FilterActions.setFilterDate(date);
+    }
+
     __getEvents() {
-        let filter = {date: this.state.current_date, categories: this.state.active_categories,
-                        free: this.state.price_free, not_free: this.state.price_not_free,
-                        start_time: this.state.start_time, finish_time: this.state.finish_time
-        };
-        EventActions.getEvents(filter);
+        // let filter = {date: this.state.current_date, categories: this.state.active_categories,
+        //                 free: this.state.price_free, not_free: this.state.price_not_free,
+        //                 start_time: this.state.start_time, finish_time: this.state.finish_time
+        // };
+
+        EventActions.getEvents(FilterStore.getFilters());
     }
 
     __getCategories() {
@@ -70,37 +68,15 @@ class Filter extends React.Component {
     }
 
     __toogleCategory(e, id) {
-        let active = this.state.active_categories;
-        for(let v in active) {
-            if(active[v] == id){
-                active.splice(v, 1);
-                this.setState({active_categories: active});
-                return this.__getEvents();
-            }
-        }
-        active.push(id);
-        this.setState({active_categories: active});
-        return this.__getEvents();
+        FilterActions.setFilterCategory(id);
     }
 
     _toogleFree(e) {
-        if(!this.state.price_free) {
-                this.setState({price_free: true});
-        }else{
-            this.setState({price_free: false});
-        }
-
-        return this.__getEvents();
+        FilterActions.setFilterFree(!e.target.checked);
     }
 
     _checkPay(e) {
-        if(!this.state.price_not_free) {
-            this.setState({price_not_free: true});
-        }else{
-            this.setState({price_not_free: false});
-        }
-
-        return this.__getEvents();
+        FilterActions.setFilterNotFree(!e.target.checked);
     }
 
     _updateTime(e, m) {
@@ -146,10 +122,10 @@ class Filter extends React.Component {
                 </div>
                 <div className="filter__section">
                     <div className="filter__title">Категории</div>
-                    <button className={`tags ${this.inArray(1, this.state.active_categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 1)}).bind(this)}><span>Развлечения</span><span className="tags__count">1237</span></button>
-                    <button className={`tags ${this.inArray(2, this.state.active_categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 2)}).bind(this)}>Спорт<span className="tags__count">1237</span></button>
-                    <button className={`tags ${this.inArray(4, this.state.active_categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 4)}).bind(this)}>Образование<span className="tags__count">1237</span></button>
-                    <button className={`tags ${this.inArray(3, this.state.active_categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 3)}).bind(this)}>Другое<span className="tags__count">1237</span></button>
+                    <button className={`tags ${this.inArray(1, this.state.filters.categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 1)}).bind(this)}><span>Развлечения</span><span className="tags__count">1237</span></button>
+                    <button className={`tags ${this.inArray(2, this.state.filters.categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 2)}).bind(this)}>Спорт<span className="tags__count">1237</span></button>
+                    <button className={`tags ${this.inArray(4, this.state.filters.categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 4)}).bind(this)}>Образование<span className="tags__count">1237</span></button>
+                    <button className={`tags ${this.inArray(3, this.state.filters.categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 3)}).bind(this)}>Другое<span className="tags__count">1237</span></button>
                 </div>
             </div>
         );

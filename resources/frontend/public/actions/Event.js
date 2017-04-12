@@ -16,10 +16,11 @@ var EventActions = {
             }
 
             if(filter.free) {
-                data.append('free', 1);
+                data.append('free', filter.free);
             }
+
             if(filter.not_free) {
-                data.append('not_free', 1);
+                data.append('not_free', filter.not_free);
             }
         }
 

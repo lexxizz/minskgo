@@ -30,16 +30,20 @@ class CommonController extends Controller
 
 
 
-//       if($request->free && !$request->not_free) {//var_dump($request->not_free);exit;
-//            $events_model->free();
-//       }
-//
-//
-//        if($request->not_free && !$request->free) {
-//            $events_model->unfree();
-//        }
+       if($request->free && !$request->not_free) {
+            $events_model->free();
+       }
 
-        $events = $events_model->get();
+
+        if($request->not_free && !$request->free) {
+            $events_model->unfree();
+        }
+
+        if(!$request->not_free && !$request->free){
+            $events = [];
+        }else{
+            $events = $events_model->get();
+        }
         
         return response()->json([
             'status' => 'OK',
