@@ -2,17 +2,21 @@ import AppDispatcher from 'napishem-frontend-utils/dispatcher/AppDispatcher';
 import EventEmitter from 'events';
 import _  from 'lodash';
 
-var __events = {};
+var __events = [];
+var __settings = {};
 
 function setEvents(data) {
-    __events = data;
+   // __events = _.merge(__events, data.events.data);
+    __events = __events.concat(data.events.data);
+    delete data.events.data;
+    __settings = data.events;
 }
 
 
 var EventStore = _.merge({}, EventEmitter.prototype, {
 
     getEvents: function() {
-        return __events;
+        return {events: __events, __settings};
     },
 
     emitChange: function() {

@@ -4,9 +4,14 @@ import EventCard from './EventCard';
 import Filter from './Filter';
 import EventActions from '../actions/Event';
 import EventStore from '../stores/Event';
+import FilterStore from '../stores/Filter';
 import ReactDOM       from 'react-dom';
 import Feature from './Feature';
 
+
+var THROTTLE_DELAY = 200;
+
+var GAP = 100;
 
 class MainPage extends React.Component {
 
@@ -15,14 +20,18 @@ class MainPage extends React.Component {
         super(props);
 
         this.__changeEvent = this._onChange.bind(this);
+        this.__scrollEvent = this._onScroll.bind(this);
 
-        this.state = {mobile_view: false};
+        this.state = {mobile_view: false, last_call: Date.now(), __settings: {current_page: 0}};
     }
     
     componentDidMount() {
         EventStore.addChangeListener(this.__changeEvent);
-        EventActions.getEvents({free: true, not_free: true});
+        window.addEventListener('scroll', this.__scrollEvent);
+        EventActions.getEvents({free: true, not_free: true}, this.state.__settings.current_page);
     }
+
+
 
     componentWillUnmount() {
         EventStore.removeChangeListener(this.__changeEvent);
@@ -30,6 +39,16 @@ class MainPage extends React.Component {
 
     _onChange() {
        this.setState(EventStore.getEvents());
+    }
+
+    _onScroll() {
+        if (Date.now() - this.state.last_call >= THROTTLE_DELAY) {
+            if (document.getElementById('layout__main').getBoundingClientRect().bottom - window.innerHeight <= GAP) {
+                console.log(this.state.__settings.current_page);
+                EventActions.getEvents(FilterStore.getFilters(), this.state.__settings.current_page);
+            }
+            this.setState({last_call: Date.now()});
+        }
     }
     
     _toggleMobileFilter() {

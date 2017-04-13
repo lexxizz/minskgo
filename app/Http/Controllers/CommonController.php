@@ -42,7 +42,7 @@ class CommonController extends Controller
         if(!$request->not_free && !$request->free){
             $events = [];
         }else{
-            $events = $events_model->get();
+            $events = $events_model->paginate(16);
         }
         
         return response()->json([

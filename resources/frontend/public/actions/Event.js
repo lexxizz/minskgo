@@ -4,7 +4,7 @@ import Request from 'napishem-frontend-utils/modules/Request';
 
 var EventActions = {
 
-    getEvents(filter) {
+    getEvents(filter, page) {
         var u = '/ajax/events';
         var data = new FormData();
         if(filter) {
@@ -22,6 +22,10 @@ var EventActions = {
             if(filter.not_free) {
                 data.append('not_free', filter.not_free);
             }
+            
+            page++;
+            
+            data.append('page', page);
         }
 
         var r = new Request(u, 'POST');
