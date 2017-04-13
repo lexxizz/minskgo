@@ -4,7 +4,8 @@ import Request from 'napishem-frontend-utils/modules/Request';
 
 var EventActions = {
 
-    getEvents(filter, page) {
+    getEvents(filter, page, reset) {
+        var action = 'GET_EVENTS';
         var u = '/ajax/events';
         var data = new FormData();
         if(filter) {
@@ -27,15 +28,26 @@ var EventActions = {
             
             data.append('page', page);
         }
+        
+        if(reset) {
+            action = 'GET_EVENTS_RESET';
+        }
 
         var r = new Request(u, 'POST');
 
         r.send((response) => {
             AppDispatcher.dispatch({
-                actionType: 'GET_EVENTS',
+                actionType: action,
                 data: response
             });
         }, data);
+    },
+    
+    resetEvents() {
+        AppDispatcher.dispatch({
+            actionType: 'RESET_EVENTS',
+            data: data
+        });
     }
 
 };

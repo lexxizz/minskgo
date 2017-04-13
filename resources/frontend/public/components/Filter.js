@@ -42,8 +42,8 @@ class Filter extends React.Component {
         //                 free: this.state.price_free, not_free: this.state.price_not_free,
         //                 start_time: this.state.start_time, finish_time: this.state.finish_time
         // };
-
-        EventActions.getEvents(FilterStore.getFilters());
+        //EventActions.resetEvents();
+        EventActions.getEvents(FilterStore.getFilters(), 0, true);
     }
 
     __getCategories() {

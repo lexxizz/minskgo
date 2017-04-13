@@ -5,6 +5,11 @@ import _  from 'lodash';
 var __events = [];
 var __settings = {};
 
+function resetEvents() {
+    __events = [];
+    __settings = {};
+}
+
 function setEvents(data) {
    // __events = _.merge(__events, data.events.data);
     __events = __events.concat(data.events.data);
@@ -36,6 +41,10 @@ AppDispatcher.register(function(payload) {
 
     switch(payload.actionType) {
         case 'GET_EVENTS':
+            setEvents(payload.data);
+            break;
+        case 'GET_EVENTS_RESET':
+            resetEvents(payload.data);
             setEvents(payload.data);
             break;
         default:

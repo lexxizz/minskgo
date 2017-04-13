@@ -43,7 +43,7 @@ class MainPage extends React.Component {
 
     _onScroll() {
         if (Date.now() - this.state.last_call >= THROTTLE_DELAY) {
-            if (document.getElementById('layout__main').getBoundingClientRect().bottom - window.innerHeight <= GAP) {
+            if (document.getElementById('layout__main').getBoundingClientRect().bottom - window.innerHeight <= GAP && this.state.__settings.current_page <= this.state.__settings.last_page) {
                 console.log(this.state.__settings.current_page);
                 EventActions.getEvents(FilterStore.getFilters(), this.state.__settings.current_page);
             }

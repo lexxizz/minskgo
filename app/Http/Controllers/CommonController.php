@@ -26,10 +26,7 @@ class CommonController extends Controller
         $events_model->join('genres', 'genres.id', '=', 'events.genre_id');
             $events_model->whereIn('genres.category_id', json_decode($request->categories));
         }
-
-
-
-
+        
        if($request->free && !$request->not_free) {
             $events_model->free();
        }
