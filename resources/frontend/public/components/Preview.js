@@ -19,6 +19,7 @@ class Preview extends React.Component {
 
     componentWillUnmount() {
         document.removeEventListener("keyup", this.__keyUpEvent, false);
+
     }
 
 

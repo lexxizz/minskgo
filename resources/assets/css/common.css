@@ -32,9 +32,15 @@ body {
   top: 0;
   left: 0;
   right: 0;
+  height: 64px;
   padding: 16px;
-  background-color: #fff;
-  box-shadow: 0 -1px 5px 1px #0050ff;
+  background-color: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.15);
+}
+@media screen and (min-width: 992px) {
+  .navbar {
+    padding: 16px 32px;
+  }
 }
 .h3 {
   text-transform: uppercase;
@@ -51,10 +57,12 @@ body {
   right: 0;
   z-index: 3;
   padding: 16px;
+  height: 50vh;
   overflow: hidden;
 }
 @media screen and (min-width: 992px) {
   .filter {
+    height: auto;
     margin-top: 64px;
     display: block;
     position: static;
@@ -83,12 +91,12 @@ body {
 .filter--active {
   display: block;
 }
-@media screen and (min-width: 992px) {
-  .filter__inner {
-    position: fixed;
-    top: 80px;
-    left: 16px;
-  }
+.filter__inner {
+  height: 100%;
+  overflow: auto;
+  background: linear-gradient(white 15px, rgba(255, 255, 255, 0)) 0 0% 50px, radial-gradient(at top, rgba(0, 0, 0, 0.2), transparent 70%) 0 0% 15px, linear-gradient(to top, white 15px, rgba(255, 255, 255, 0)) bottom / 100% 50px, radial-gradient(at bottom, rgba(0, 0, 0, 0.2), transparent 70%) bottom / 100% 15px;
+  background-repeat: no-repeat;
+  background-attachment: local, scroll, local, scroll;
 }
 .filter__section + .filter__section {
   margin-top: 16px;
@@ -112,23 +120,36 @@ body {
   font-size: 14px;
   line-height: 16px;
   cursor: pointer;
+  min-width: 30px;
 }
 .tags + .tags {
   margin-top: 16px;
 }
 .tags--simple {
+  margin-right: 8px;
   border: 2px solid #0050ff;
   margin-top: 8px;
-  height: 18px;
-  padding: 0 4px;
-  border-radius: 8px;
+  height: 22px;
+  padding: 2px 8px;
+  border-radius: 12px;
   font-size: 12px;
   line-height: 12px;
   cursor: default;
 }
 .tags--simple + .tags--simple {
-  margin-left: 8px;
   margin-top: 8px;
+}
+.tags--simple:last-child {
+  margin-left: 0;
+}
+.tags--tag {
+  margin-top: 0;
+  margin-bottom: 8px;
+  padding: 0px 8px;
+  height: 24px;
+}
+.tags--tag + .tags--tag {
+  margin-top: 0;
 }
 .tags__count {
   height: 16px;
@@ -157,12 +178,40 @@ body {
   background-color: #0050ff;
   color: #fff;
 }
+.tags__wrapper {
+  padding-bottom: 16px;
+}
+.tags__wrapper--open > .tags__inner {
+  display: flex;
+}
+.tags__inner {
+  display: none;
+  flex-wrap: wrap;
+  padding-top: 0px;
+}
 .input {
   border: 1px solid #0050ff;
   border-radius: 16px;
   height: 32px;
   background-color: transparent;
   padding-left: 16px;
+}
+.input--date {
+  width: 188px;
+}
+.input__line {
+  position: relative;
+}
+.input__close {
+  position: absolute;
+  font-size: 28px;
+  line-height: 29px;
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.5);
+  top: 50%;
+  transform: translateY(-50%);
+  left: 164px;
+  cursor: pointer;
 }
 .slider {
   width: 186px;
@@ -364,6 +413,11 @@ body {
   left: 16px;
   bottom: 24px;
 }
+button:active,
+button:focus {
+  outline: 0;
+  -moz-outline-style: none;
+}
 .btn {
   display: flex;
   border: 2px solid #0050ff;
@@ -373,7 +427,6 @@ body {
   font-size: 18px;
   font-weight: normal;
   cursor: pointer;
-  outline: none;
   border-radius: 16px;
   height: 32px;
   background: transparent;
@@ -393,7 +446,6 @@ body {
   color: #fff;
   font-size: 32px;
   cursor: pointer;
-  outline: none;
   border: none;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3), 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0px 1px 0px rgba(255, 255, 255, 0.25), inset 0px -1px 0px rgba(0, 0, 0, 0.15);
 }
@@ -418,16 +470,22 @@ body {
   z-index: 100;
 }
 .btn-uni {
-  border: 2px solid blue;
-  border-radius: 50%;
-  background: white;
-  width: 48px;
-  height: 48px;
+  border: none;
+  background: transparent;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
+  padding: 0;
 }
 .btn-uni__icon {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
 }
 .h2 {
   font-size: 30px;
@@ -926,7 +984,7 @@ b {
   top: 102px;
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
+  display: none;
   flex-direction: column;
   padding: 0 16px;
   padding-bottom: 32px;

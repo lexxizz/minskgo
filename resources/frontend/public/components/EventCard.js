@@ -2,6 +2,7 @@ import React from 'react';
 import { Router, Route, Link } from 'react-router';
 import ReactDOM       from 'react-dom';
 import Preview from './Preview';
+import dateFormat from 'dateformat';
 
 
 class EventCard extends React.Component {
@@ -17,6 +18,7 @@ class EventCard extends React.Component {
                 <img src={this.props.data.image} alt="" className="card__img" />
                 <a href="#" className="card__content">
                     <h3 className="h3">{this.props.data.name}</h3>
+                    <span className="card__date">{dateFormat(new Date(this.props.data.event_date), "dd.mm.yyyy")}</span>
                     <span className="card__like"><i className="fa fa-heart-o" aria-hidden="true"></i></span>
                     <span className={`card__price ${this.props.data.free != 1  ? `card__price--pay` : ``}`}><i className="fa fa-usd" aria-hidden="true"></i></span>
                     <div className="card__tags-wrapper">

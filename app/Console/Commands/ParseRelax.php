@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Event;
+use App\EventTimetable;
 use App\Genre;
 use App\Place;
 use GuzzleHttp\Client;
@@ -42,9 +43,17 @@ class ParseRelax extends Command
      */
     public function handle()
     {
-        $client = new Client();
-        $res = $client->request('GET', 'http://afisha.relax.by/event/minsk/');
+        $links = ['http://afisha.relax.by/event/minsk/', 'http://afisha.relax.by/clubs/minsk/', 'http://afisha.relax.by/education/minsk/'];
 
+        foreach ($links as $link) {
+            $client = new Client();
+            $res = $client->request('GET', $link);
+            $this->parseRelaxLink($res);
+        }
+    }
+
+
+    protected function parseRelaxLink($res) {
         $result = $res->getBody()->getContents();
 
         $crawler = new Crawler($result);
@@ -94,23 +103,6 @@ class ParseRelax extends Command
             }
 
 
-            $date_node = $link_crawler->filter('.schedule__day strong');
-            $date_text = $date_node->count() ? $date_node->text() : null;
-
-            if($date_text) {
-                $date = explode('—', $date_text);
-                if(sizeof($date) >=2) {
-                    $from = $this->getDateByString($date[0]);
-                    if($from) {
-                        $hash['date_from'] = $from->setTime(00, 00, 00);
-                    }
-                    $to = $this->getDateByString($date[1]);
-                    if($to) {
-                        $hash['date_to'] = $to->setTime(23, 59, 59);
-                    }
-                }
-            }
-
             $time_descr = $link_crawler->filter('.b-afisha_cinema_description_table_name');
             if($time_descr->count()) {
                 if(trim($link_crawler->filter('.b-afisha_cinema_description_table_name')->first()->text()) == 'Время работы') {
@@ -134,50 +126,112 @@ class ParseRelax extends Command
                     }
                 }
             }
-            
-            
-            if($link_crawler->filter('.schedule__day')->count()) {
-                if(stristr(trim($link_crawler->filter('.schedule__day')->text()), 'сегодня')) {
-                    $hash['date_from'] = (new \DateTime())->setTime(00, 00, 00);
-                }
-                if(stristr(trim($link_crawler->filter('.schedule__day')->text()), 'завтра')) {
-                    $hash['date_from'] = (new \DateTime())->modify('+1 day')->setTime(00, 00, 00);
-                }
-                if(!isset($hash['date_from']) && !isset($hash['date_to'])){
-                    $date = explode(',', $link_crawler->filter('.schedule__day')->text());
-                    if(sizeof($date) == 1) {
-                        $d = $date[0];
-                    }
-                    if(sizeof($date) == 2) {
-                        $d = $date[1];
-                    }
-                    $from = $this->getDateByString($d);
-                    if($from) {
-                        $hash['date_from'] = $from->setTime(00, 00, 00);
-                    }
 
-                    $to = $this->getDateByString($d);
-                    if($to) {
-                        $hash['date_to'] = $to->setTime(23, 59, 59);
-                    }
-
-                }
-                if(!isset($hash['time']) ) {
-                    $time = $link_crawler->filter('.schedule__seance-time');
-                    if($time->count()) {
-                        $time_val = explode(':', trim($time->text()));
-                        if(sizeof($time_val[0]) <=2) {
-                            $hash['time'] = trim($time_val[0]);
-                        }
-                    }
-                }
-
-            }
 
             $hash['place_id'] = $event_place->id;
             if(!Event::where('uid', $hash['uid'])->first()) {
-                Event::create($hash);
+                $event = Event::create($hash);
+
+                if($link_crawler->filter('.schedule__day')->count()) {
+
+                    $date_hash = $link_crawler->filter('.schedule__day')->each(function (Crawler $link_crawler, $i) {
+
+                        if(stristr(trim($link_crawler->filter('.schedule__day')->text()), 'сегодня')) {
+                            $date_hash['event_date'] = (new \DateTime())->setTime(00, 00, 00);
+                        }
+                        if(stristr(trim($link_crawler->filter('.schedule__day')->text()), 'завтра')) {
+                            $date_hash['event_date'] = (new \DateTime())->modify('+1 day')->setTime(00, 00, 00);
+                        }
+                        if(!isset($date_hash['event_date']) && !isset($date_hash['date_to'])){
+                            $date = explode(',', $link_crawler->filter('.schedule__day')->text());
+                            if(sizeof($date) == 1) {
+                                $d = $date[0];
+                            }
+                            if(sizeof($date) == 2) {
+                                $d = $date[1];
+                            }
+                            $from = $this->getDateByString($d);
+                            if($from) {
+                                $date_hash['event_date'] = $from->setTime(00, 00, 00);
+                            }
+
+//                            $to = $this->getDateByString($d);
+//                            if($to) {
+//                                $date_hash['date_to'] = $to->setTime(23, 59, 59);
+//                            }
+
+                        }
+                        if(isset($date_hash['event_date'])) {
+                            $date_hash['time'] = $link_crawler->nextAll()->filter('.schedule__time')->text();
+                        }
+
+
+
+//                        var_dump($node->text());
+//                        var_dump($node->nextAll()->filter('.schedule__time')->text());
+                        return isset($date_hash) ? $date_hash : null;
+                    });
+
+                    if($date_hash){
+                        foreach ($date_hash as $item) {
+                            $item['event_id'] = $event->id;
+                            EventTimetable::create($item);
+                        }
+                    }
+
+                    if(!$date_hash[0]) {
+                        $date_node = $link_crawler->filter('.schedule__day strong');
+                        $date_text = $date_node->count() ? $date_node->text() : null;
+
+                        if($date_text) {
+                            $date = explode('—', $date_text);
+                            if(sizeof($date) >=2) {
+                                $from = $this->getDateByString($date[0]);
+                                if($from) {
+                                    $date_hash['date_from'] = $from->setTime(00, 00, 00);
+                                }
+                                $to = $this->getDateByString($date[1]);
+                                if($to) {
+                                    $date_hash['date_to'] = $to->setTime(23, 59, 59);
+                                }
+                            }
+
+                            //                    if(!isset($hash['time']) ) {
+
+                            if(empty($date_hash['time'])) {
+                                $time = $link_crawler->filter('.schedule__seance-time');
+                                if($time->count()) {
+                                    $time_val = explode(':', trim($time->text()));
+                                    if(sizeof($time_val[0]) <=2) {
+                                        $date_hash['time'] = trim($time_val[0]);
+                                    }
+                                }
+                            }
+
+//                    }
+                        }
+                        if(!empty($date_hash) && isset($date_hash['date_from']) && isset($date_hash['date_to'])) {
+                            $interval = new \DateInterval('P1D');
+                            $period = new \DatePeriod($date_hash['date_from'], $interval, $date_hash['date_to']);
+                            foreach ($period as $date) {
+                                $item['event_id'] = $event->id;
+                                if(isset($date_hash['time'])) {
+                                    $item['event_date'] = $date->setTime($date_hash['time'], 00, 00);
+                                }else{
+                                    $item['event_date'] = $date;
+                                }
+                                EventTimetable::create($item);
+                            }
+                        }
+                    }
+
+
+                }
+
+
             }
+
+
 
         });
     }

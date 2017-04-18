@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Console\Commands\ParseRelax;
 use App\Event;
 use App\Http\Requests;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Symfony\Component\DomCrawler\Crawler;
 
 class CommonController extends Controller
 {
@@ -15,11 +18,12 @@ class CommonController extends Controller
     }
     
     public function events(Request $request) {
-        $events_model = Event::with('place')->with('genre')->actual();
+        $events_model = Event::with('place');
+        $events_model->join('events_timetable', 'events_timetable.event_id', '=', 'events.id')->where('event_date', '>=', (new \DateTime())->setTime(00,00,00));
 
         if($request->date) {
-            $events_model->where('date_from', '<=', (new \DateTime($request->date)))
-                ->where('date_to', '>=', (new \DateTime($request->date)));
+            $events_model->where('event_date', '<=', (new \DateTime($request->date))->setTime(23, 59, 59))
+                ->where('event_date', '>=', (new \DateTime($request->date))->setTime(00, 00, 00));
         }
 
         if(!empty(json_decode($request->categories))) {
@@ -39,7 +43,7 @@ class CommonController extends Controller
         if(!$request->not_free && !$request->free){
             $events = [];
         }else{
-            $events = $events_model->paginate(16);
+            $events = $events_model->groupBy('events.id')->orderBy('k_int', 'desc')->orderBy('events_timetable.event_date')->paginate(16);
         }
         
         return response()->json([
@@ -53,6 +57,26 @@ class CommonController extends Controller
             'status' => 'OK',
             'categories' => Category::all()
         ]);
+    }
+
+
+    public function parse() {
+
+        $parser = new ParseRelax();
+        $parser->handle();
+        
+//        $client = new  Client();
+//        //$res = $client->request('GET', 'http://afisha.relax.by/event/10336364-delyfinarij-v-zooparke/minsk/');
+//        $res = $client->request('GET', 'http://afisha.relax.by/expo/10703005-star-wars/minsk/');
+//
+//        $result = $res->getBody()->getContents();
+//
+//        $crawler = new Crawler($result);
+//
+//        $crawler->filter('.schedule__day')->each(function (Crawler $node, $i) {
+//            var_dump($node->text());
+//            var_dump($node->nextAll()->filter('.schedule__time')->text());
+//        });
     }
     
 

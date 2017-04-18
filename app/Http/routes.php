@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', 'CommonController@index');
+Route::get('/parse', 'CommonController@parse');
 Route::get('/event/add', 'AdminController@add');
 Route::post('/event/store', 'AdminController@store');
+Route::any('{all?}', 'CommonController@index');
 
 Route::group(['prefix' => 'ajax'], function () {
     Route::post('/events', 'CommonController@events');

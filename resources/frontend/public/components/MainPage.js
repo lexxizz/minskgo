@@ -9,9 +9,9 @@ import ReactDOM       from 'react-dom';
 import Feature from './Feature';
 
 
-var THROTTLE_DELAY = 200;
+var THROTTLE_DELAY = 100;
 
-var GAP = 100;
+var GAP = 300;
 
 class MainPage extends React.Component {
 
@@ -22,7 +22,7 @@ class MainPage extends React.Component {
         this.__changeEvent = this._onChange.bind(this);
         this.__scrollEvent = this._onScroll.bind(this);
 
-        this.state = {mobile_view: false, last_call: Date.now(), __settings: {current_page: 0}};
+        this.state = {mobile_view: false, last_call: Date.now(), __settings: {current_page: 0}, loading_page: 0};
     }
     
     componentDidMount() {
@@ -31,8 +31,6 @@ class MainPage extends React.Component {
         EventActions.getEvents({free: true, not_free: true}, this.state.__settings.current_page);
     }
 
-
-
     componentWillUnmount() {
         EventStore.removeChangeListener(this.__changeEvent);
     }
@@ -40,14 +38,20 @@ class MainPage extends React.Component {
     _onChange() {
        this.setState(EventStore.getEvents());
     }
+    
+    _resetLoadingPage() {
+        this.setState({loading_page: 0});
+    }
 
     _onScroll() {
         if (Date.now() - this.state.last_call >= THROTTLE_DELAY) {
-            if (document.getElementById('layout__main').getBoundingClientRect().bottom - window.innerHeight <= GAP && this.state.__settings.current_page <= this.state.__settings.last_page) {
-                console.log(this.state.__settings.current_page);
-                EventActions.getEvents(FilterStore.getFilters(), this.state.__settings.current_page);
+            if (document.getElementById('layout__main').getBoundingClientRect().bottom - window.innerHeight <= GAP && this.state.__settings.current_page <= this.state.__settings.last_page && this.state.__settings.current_page > this.state.loading_page) {
+                this.setState({last_call: Date.now(), loading_page: this.state.__settings.current_page}, function() {
+                    EventActions.getEvents(FilterStore.getFilters(), this.state.__settings.current_page);
+                });
+
             }
-            this.setState({last_call: Date.now()});
+
         }
     }
     
@@ -90,11 +94,12 @@ fill:'#0050ff',
                             return <EventCard key={key} data={event} />
                         })}
                     </div>
-                    <Filter mobile_active={this.state.mobile_view} />
+                    <Filter mobile_active={this.state.mobile_view} resetLoading={this._resetLoadingPage.bind(this)}/>
                 </div>
 
                <div className="preview" id="preview"></div>
                <div id="feature"></div>
+                {this.props.children}
             </div>
         );
     }

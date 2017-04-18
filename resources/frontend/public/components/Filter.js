@@ -30,6 +30,7 @@ class Filter extends React.Component {
 
     _onChange() {
         this.setState({filters: FilterStore.getFilters()});
+        this.props.resetLoading();
         this.__getEvents();
     }
 
@@ -88,7 +89,7 @@ class Filter extends React.Component {
 
     render() {
         return (
-            <div className={`filter ${this.props.mobile_active ? `filter--active` : ``}`}>
+            <div className={`filter filter__inner ${this.props.mobile_active ? `filter--active` : ``}`}>
                 <div className="filter__section">
                     <div className="filter__title">Стоимость</div>
                     <div className="checkbox">
@@ -104,6 +105,7 @@ class Filter extends React.Component {
                     <div className="filter__title">Даты</div>
                     <div className="input__line">
                         <Flatpickr className='input input__date' onChange={((e, k) => {this._changeDate(e, k)}).bind(this)} />
+                        <span className="input__close">×</span>
                     </div>
                 </div>
                 <div className="filter__section">
