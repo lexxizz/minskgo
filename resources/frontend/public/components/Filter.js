@@ -89,7 +89,8 @@ class Filter extends React.Component {
 
     render() {
         return (
-            <div className={`filter filter__inner ${this.props.mobile_active ? `filter--active` : ``}`}>
+            <div className={`filter ${this.props.mobile_active ? `filter--active` : ``}`}>
+                <div className="filter__inner">
                 <div className="filter__section">
                     <div className="filter__title">Стоимость</div>
                     <div className="checkbox">
@@ -104,7 +105,7 @@ class Filter extends React.Component {
                 <div className="filter__section">
                     <div className="filter__title">Даты</div>
                     <div className="input__line">
-                        <Flatpickr className='input input__date' onChange={((e, k) => {this._changeDate(e, k)}).bind(this)} />
+                        <Flatpickr className='input input--date' onChange={((e, k) => {this._changeDate(e, k)}).bind(this)} />
                         <span className="input__close">×</span>
                     </div>
                 </div>
@@ -128,6 +129,7 @@ class Filter extends React.Component {
                     <button className={`tags ${this.inArray(2, this.state.filters.categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 2)}).bind(this)}>Спорт<span className="tags__count">1237</span></button>
                     <button className={`tags ${this.inArray(4, this.state.filters.categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 4)}).bind(this)}>Образование<span className="tags__count">1237</span></button>
                     <button className={`tags ${this.inArray(3, this.state.filters.categories)? `tags--active` : ``}`} onClick={((e) => {this.__toogleCategory(e, 3)}).bind(this)}>Другое<span className="tags__count">1237</span></button>
+                </div>
                 </div>
             </div>
         );

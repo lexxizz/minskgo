@@ -18,7 +18,7 @@
 </head>
 
 <body>
-<div class="body body--popup" id="layout__main"></div>
+<div class="body" id="layout__main"></div>
 
 <script src={{ env('NAME') }}></script>
 

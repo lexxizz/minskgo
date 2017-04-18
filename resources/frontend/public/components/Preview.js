@@ -15,11 +15,12 @@ class Preview extends React.Component {
     componentDidMount() {
         document.addEventListener("keyup", this.__keyUpEvent, false);
         document.getElementById('preview').className += ' preview--open';
+        document.getElementById('layout__main').className += ' body--popup';
     }
 
     componentWillUnmount() {
         document.removeEventListener("keyup", this.__keyUpEvent, false);
-
+        document.getElementById('layout__main').className = 'body';
     }
 
 

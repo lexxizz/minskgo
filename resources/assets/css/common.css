@@ -14,6 +14,7 @@ body {
 }
 .body--popup {
   overflow: hidden;
+  height: 100vh;
 }
 .wrapper {
   display: flex;
@@ -97,6 +98,12 @@ body {
   background: linear-gradient(white 15px, rgba(255, 255, 255, 0)) 0 0% 50px, radial-gradient(at top, rgba(0, 0, 0, 0.2), transparent 70%) 0 0% 15px, linear-gradient(to top, white 15px, rgba(255, 255, 255, 0)) bottom / 100% 50px, radial-gradient(at bottom, rgba(0, 0, 0, 0.2), transparent 70%) bottom / 100% 15px;
   background-repeat: no-repeat;
   background-attachment: local, scroll, local, scroll;
+}
+@media screen and (min-width: 992px) {
+  .filter__inner {
+    position: fixed;
+    overflow: visible;
+  }
 }
 .filter__section + .filter__section {
   margin-top: 16px;
